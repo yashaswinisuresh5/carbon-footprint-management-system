@@ -6,6 +6,8 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+date_default_timezone_set('Asia/Kolkata');
+
 define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PASS', '');
@@ -20,6 +22,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
+    $pdo->exec("SET time_zone = '+05:30';");
 } catch (PDOException $e) {
     // If the database does not exist (Error Code 1049) or another database issue occurs, attempt auto-creation
     try {
@@ -27,6 +30,7 @@ try {
         $bootstrap_pdo = new PDO("mysql:host=" . DB_HOST . ";charset=utf8mb4", DB_USER, DB_PASS, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         ]);
+        $bootstrap_pdo->exec("SET time_zone = '+05:30';");
         
         // Path to schema.sql
         $schema_file = dirname(__DIR__) . '/database/schema.sql';
@@ -43,6 +47,7 @@ try {
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
+            $pdo->exec("SET time_zone = '+05:30';");
         } else {
             // If schema file cannot be found, output critical error
             throw new Exception("Database does not exist, and schema.sql file is missing at: " . $schema_file);
